@@ -27,6 +27,8 @@ export function TodoIndex() {
     }, [filterBy])
 
     function onRemoveTodo(todoId) {
+        if (!confirm('Are you sure you want to delete this?')) return
+
         removeTodo(todoId)
             .then(() => {
                 showSuccessMsg(`Todo removed`)
