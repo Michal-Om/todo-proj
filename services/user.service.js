@@ -8,10 +8,11 @@ export const userService = {
     signup,
     getById,
     query,
-    getEmptyCredentials
+    getEmptyCredentials,
+    addActivity
 }
-const STORAGE_KEY_LOGGEDIN = 'user'
-const STORAGE_KEY = 'userDB'
+const STORAGE_KEY_LOGGEDIN = 'user' // for session storage currently logged in user
+const STORAGE_KEY = 'userDB' // for local storage, all users db
 
 function query() {
     return storageService.query(STORAGE_KEY)
@@ -31,7 +32,13 @@ function login({ username, password }) {
 }
 
 function signup({ username, password, fullname }) {
-    const user = { username, password, fullname }
+    const user = {
+        username,
+        password,
+        fullname,
+        balance: 10000,
+        activities: []
+    }
     user.createdAt = user.updatedAt = Date.now()
 
     return storageService.post(STORAGE_KEY, user)
@@ -58,7 +65,24 @@ function getEmptyCredentials() {
         fullname: '',
         username: 'muki',
         password: 'muki1',
+        balance: 10000,
+        activities: []
     }
+}
+
+function addActivity(txt) {
+    const user = getLoggedinUser()
+    if (!user) return Promise.reject('User not logged in')
+
+    if (!user.activities) user.activities = []
+    user.activities.push({ txt, at: Date.now() })
+
+    return storageService.put(STORAGE_KEY, user)
+        .then(() => {
+            sessionStorage.setItem(STORAGE_KEY_LOGGEDIN, JSON.stringify(user))
+            console.log('Activities:', user.activities)
+            return user //updated user
+        })
 }
 
 // signup({username: 'muki', password: 'muki1', fullname: 'Muki Ja'})

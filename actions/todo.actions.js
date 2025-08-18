@@ -1,4 +1,5 @@
 import { todoService } from "../services/todo.service.js"
+import { userService } from "../services/user.service.js"
 import { ADD_TODO, REMOVE_TODO, SET_TODOS, store, UPDATE_TODO } from "../store/store.js"
 
 export function loadTodos() {
@@ -11,9 +12,17 @@ export function removeTodo(todoId) {
         .then(() => store.dispatch({ type: REMOVE_TODO, todoId }))
 }
 
-export function saveTodo(todoToSave) {
-    const type = todoToSave._id ? UPDATE_TODO : ADD_TODO
+export function saveTodo(todo) {
+    const user = userService.getLoggedinUser()
+    if (!user) return Promise.reject('User not logged in')
 
-    return todoService.save(todoToSave)
-        .then(savedTodo => store.dispatch({ type, todo: savedTodo }))
+    const type = todo._id ? UPDATE_TODO : ADD_TODO
+    const action = todo._id ? 'Updated' : 'Added'
+    return todoService.save(todo)
+        .then(savedTodo => {
+            store.dispatch({ type, todo: savedTodo })
+
+            userService.addActivity(`${action} todo: ${savedTodo.txt}`)
+            return savedTodo
+        })
 }
