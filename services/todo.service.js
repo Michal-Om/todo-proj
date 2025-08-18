@@ -57,8 +57,14 @@ function save(todo) {
     }
 }
 
-function getEmptyTodo(txt = '', importance = 5) {
-    return { txt, importance, isDone: false }
+function getEmptyTodo(txt = '', importance = 5, bgColor = '#ffffff', fontColor = '#000000') {
+    return {
+        txt,
+        importance,
+        isDone: false,
+        bgColor,
+        fontColor
+    }
 }
 
 function getDefaultFilter() {
@@ -133,6 +139,8 @@ function _getTodoCountByImportanceMap(todos) {
 //     txt: "Master Redux",
 //     importance: 9,
 //     isDone: false,
+//     bgColor: '#ffffff',
+//     fontColor: '#000000'
 //     createdAt: 1711472269690,
 //     updatedAt: 1711472269690
 // }

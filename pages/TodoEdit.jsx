@@ -57,13 +57,30 @@ export function TodoEdit() {
     const { txt, importance, isDone } = todoToEdit
 
     return (
-        <section className="todo-edit">
+        <section className="todo-edit"
+            style={{
+                backgroundColor: todoToEdit.bgColor,
+                color: todoToEdit.fontColor,
+            }}
+        >
             <form onSubmit={onSaveTodo} >
                 <label htmlFor="txt">Text:</label>
                 <input onChange={handleChange} value={txt} type="text" name="txt" id="txt" />
 
                 <label htmlFor="importance">Importance:</label>
                 <input onChange={handleChange} value={importance} type="number" name="importance" id="importance" />
+
+                <label htmlFor="bgColor">Background Color:</label>
+                <input onChange={handleChange} value={todoToEdit.bgColor || '#ffffff'}
+                    type="color"
+                    name="bgColor"
+                    id="bgColor" />
+
+                <label htmlFor="fontColor">Font Color:</label>
+                <input onChange={handleChange} value={todoToEdit.fontColor || '#000000'}
+                    type="color"
+                    name="fontColor"
+                    id="fontColor" />
 
                 <label htmlFor="isDone">isDone:</label>
                 <input onChange={handleChange} value={isDone} type="checkbox" name="isDone" id="isDone" />
