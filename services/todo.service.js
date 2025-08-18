@@ -68,7 +68,7 @@ function getEmptyTodo(txt = '', importance = 5, bgColor = '#ffffff', fontColor =
 }
 
 function getDefaultFilter() {
-    return { txt: '', importance: 0 }
+    return { txt: '', importance: 0, status: 'all' }
 }
 
 function getFilterFromSearchParams(searchParams) {
