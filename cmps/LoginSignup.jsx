@@ -24,17 +24,31 @@ export function LoginSignup({ onSetUser }) {
     }
 
     function login(credentials) {
+        console.log('[LoginSignup] login called with credentials:', credentials)
         userService.login(credentials)
-            .then(onSetUser)
-            .then(() => { showSuccessMsg('Logged in successfully') })
-            .catch((err) => { showErrorMsg('Oops try again') })
+            .then(user => {
+                console.log('[LoginSignup] login returned user:', user)
+                onSetUser(user)
+                showSuccessMsg('Logged in successfully')
+            })
+            .catch(err => {
+                console.log('[LoginSignup] login failed:', err)
+                showErrorMsg('Oops try again')
+            })
     }
 
     function signup(credentials) {
+        console.log('[LoginSignup] signup called with credentials:', credentials)
         userService.signup(credentials)
-            .then(onSetUser)
-            .then(() => { showSuccessMsg('Signed in successfully') })
-            .catch((err) => { showErrorMsg('Oops try again') })
+            .then(user => {
+                console.log('[LoginSignup] signup returned user:', user)
+                onSetUser(user)
+                showSuccessMsg('Signed in successfully')
+            })
+            .catch(err => {
+                console.log('[LoginSignup] signup failed:', err)
+                showErrorMsg('Oops try again')
+            })
     }
 
     return (

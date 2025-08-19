@@ -1,3 +1,4 @@
+
 import { storageService } from "./async-storage.service.js"
 
 
@@ -9,7 +10,8 @@ export const userService = {
     getById,
     query,
     getEmptyCredentials,
-    addActivity
+    addActivity,
+    updateUserBalance
 }
 const STORAGE_KEY_LOGGEDIN = 'user' // for session storage currently logged in user
 const STORAGE_KEY = 'userDB' // for local storage, all users db
@@ -25,7 +27,7 @@ function getById(userId) {
 function login({ username, password }) {
     return storageService.query(STORAGE_KEY)
         .then(users => {
-            const user = users.find(user => user.username === username)
+            const user = users.find(user => user.username === username && user.password === password)
             if (user) return _setLoggedinUser(user)
             else return Promise.reject('Invalid login')
         })
@@ -55,7 +57,13 @@ function getLoggedinUser() {
 }
 
 function _setLoggedinUser(user) {
-    const userToSave = { _id: user._id, fullname: user.fullname }
+    const userToSave = {
+        _id: user._id,
+        username: user.username,
+        fullname: user.fullname,
+        balance: user.balance || 10000,
+        activities: user.activities || []
+    }
     sessionStorage.setItem(STORAGE_KEY_LOGGEDIN, JSON.stringify(userToSave))
     return userToSave
 }
@@ -70,19 +78,27 @@ function getEmptyCredentials() {
     }
 }
 
-function addActivity(txt) {
-    const user = getLoggedinUser()
-    if (!user) return Promise.reject('User not logged in')
+function addActivity(txt, user = null) {
+    const currUser = user || getLoggedinUser()
+    if (!currUser) return Promise.reject('User not logged in')
 
-    if (!user.activities) user.activities = []
-    user.activities.push({ txt, at: Date.now() })
+    if (!currUser.activities) currUser.activities = []
+    currUser.activities.push({ txt, at: Date.now() })
 
-    return storageService.put(STORAGE_KEY, user)
+    return storageService.put(STORAGE_KEY, currUser)
         .then(() => {
-            sessionStorage.setItem(STORAGE_KEY_LOGGEDIN, JSON.stringify(user))
-            console.log('Activities:', user.activities)
-            return user //updated user
+            sessionStorage.setItem(STORAGE_KEY_LOGGEDIN, JSON.stringify(currUser))
+            console.log('Activities:', currUser.activities)
+            return currUser //updated user
         })
+}
+
+function updateUserBalance(newBalance) {
+    const user = getLoggedinUser()
+    if (!user) return null
+    user.balance = newBalance
+    sessionStorage.setItem(STORAGE_KEY_LOGGEDIN, JSON.stringify(user))
+    return user
 }
 
 // signup({username: 'muki', password: 'muki1', fullname: 'Muki Ja'})
