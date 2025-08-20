@@ -53,6 +53,7 @@ export function TodoIndex() {
     }
 
     if (!todos) return <div>Loading...</div>
+    if (!todos.length) return <div>No todos to show</div>
     return (
         <section className="todo-index">
             <TodoFilter filterBy={filterBy} onSetFilterBy={setFilterBy} />

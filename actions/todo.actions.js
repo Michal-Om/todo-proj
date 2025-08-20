@@ -8,8 +8,26 @@ export function loadTodos() {
 }
 
 export function removeTodo(todoId) {
+    const user = userService.getLoggedinUser()
+    if (!user) return Promise.reject('User not logged in')
+
+    //getState: read the current global state from Redux store.
+    const todo = store.getState().todos.find(todo => todo._id === todoId)
+    if (!todo) return Promise.reject('Todo not found')
+
+    const activityTxt = `Removed todo: ${todo.txt}`
+
     return todoService.remove(todoId)
-        .then(() => store.dispatch({ type: REMOVE_TODO, todoId }))
+        .then(() => {
+            store.dispatch({ type: REMOVE_TODO, todoId })
+
+            return userService.addActivity(activityTxt, user)
+                .then(userWithActivity => {
+                    store.dispatch({ type: SET_LOGGEDIN_USER, user: userWithActivity })
+                })
+        })
+
+
 }
 
 export function saveTodo(todo) {

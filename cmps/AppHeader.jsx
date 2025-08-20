@@ -31,13 +31,26 @@ export function AppHeader() {
             })
     }
 
+    function getStyleByUser() {
+        const prefs = {
+            color: '',
+            backgroundColor: ''
+        }
+
+        if (user && user.prefs) {
+            prefs.color = user.prefs.color
+            prefs.backgroundColor = user.prefs.bgColor
+        }
+        return prefs
+    }
+
     return (
-        <header className="app-header full main-layout">
+        <header style={getStyleByUser()} className="app-header full main-layout">
             <section className="header-container">
                 <h1>React Todo App</h1>
                 {user ? (
                     < section >
-                        <Link to={`/user/${user._id}`}>Hello {user.fullname}! Your balance is:{user.balance}
+                        <Link to="/user">Hello {user.fullname}! Your balance is:{user.balance}
                         </Link>
                         <button onClick={onLogout}>Logout</button>
                     </ section >
@@ -51,6 +64,7 @@ export function AppHeader() {
                     <NavLink to="/about" >About</NavLink>
                     <NavLink to="/todo" >Todos</NavLink>
                     <NavLink to="/dashboard" >Dashboard</NavLink>
+                    <NavLink to="/user" >User profile</NavLink>
                 </nav>
             </section>
             <UserMsg />

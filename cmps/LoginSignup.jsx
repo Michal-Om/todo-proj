@@ -24,10 +24,8 @@ export function LoginSignup({ onSetUser }) {
     }
 
     function login(credentials) {
-        console.log('[LoginSignup] login called with credentials:', credentials)
         userService.login(credentials)
             .then(user => {
-                console.log('[LoginSignup] login returned user:', user)
                 onSetUser(user)
                 showSuccessMsg('Logged in successfully')
             })
@@ -38,10 +36,8 @@ export function LoginSignup({ onSetUser }) {
     }
 
     function signup(credentials) {
-        console.log('[LoginSignup] signup called with credentials:', credentials)
         userService.signup(credentials)
             .then(user => {
-                console.log('[LoginSignup] signup returned user:', user)
                 onSetUser(user)
                 showSuccessMsg('Signed in successfully')
             })
