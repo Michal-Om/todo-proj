@@ -1,17 +1,11 @@
 import { TodoPreview } from "./TodoPreview.jsx"
 const { Link } = ReactRouterDOM
 
-export function TodoList({ todos, filterBy, onRemoveTodo, onToggleTodo }) {
-
-    const filteredTodos = todos.filter(todo => {
-        if (filterBy.status === 'active') return !todo.isDone
-        if (filterBy.status === 'done') return todo.isDone
-        return true //show all
-    })
+export function TodoList({ todos, onRemoveTodo, onToggleTodo }) {
 
     return (
         <ul className="todo-list">
-            {filteredTodos.map(todo =>
+            {todos.map(todo =>
                 <li key={todo._id}
                     style={{ backgroundColor: todo.bgColor, color: todo.fontColor }}
                 >

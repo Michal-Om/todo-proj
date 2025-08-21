@@ -21,8 +21,12 @@ export function TodoIndex() {
     const [filterBy, setFilterBy] = useState(defaultFilter)
 
     useEffect(() => {
-        setSearchParams(filterBy)
         loadTodos()
+    }, [])
+
+    useEffect(() => {
+        setSearchParams(filterBy)
+        loadTodos(filterBy)
 
     }, [filterBy])
 

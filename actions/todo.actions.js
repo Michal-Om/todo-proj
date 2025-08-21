@@ -2,9 +2,13 @@ import { todoService } from "../services/todo.service.js"
 import { userService } from "../services/user.service.js"
 import { ADD_TODO, REMOVE_TODO, SET_LOGGEDIN_USER, SET_TODOS, store, UPDATE_TODO } from "../store/store.js"
 
-export function loadTodos() {
-    return todoService.query()
+export function loadTodos(filterBy) {
+    return todoService.query(filterBy)
         .then(todos => store.dispatch({ type: SET_TODOS, todos }))
+        .catch(err => {
+            console.log('err:', err)
+            throw err
+        })
 }
 
 export function removeTodo(todoId) {
@@ -26,8 +30,6 @@ export function removeTodo(todoId) {
                     store.dispatch({ type: SET_LOGGEDIN_USER, user: userWithActivity })
                 })
         })
-
-
 }
 
 export function saveTodo(todo) {
